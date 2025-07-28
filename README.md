@@ -76,19 +76,6 @@ git merge hotfix/fix-login
 git branch -d hotfix/fix-login
 ```
 
----
-
-### `release/*` (Preparación de Nueva Versión)
-📌 Se crean desde `develop` cuando se prepara una nueva versión para producción.
-📌 Se usa para **pruebas finales** y ajustes antes de lanzar la versión.
-📌 Se fusiona en `main` y `develop` y luego se elimina.
-
-```sh
-# Crear una rama de versión
- git checkout develop
- git checkout -b release/v1.0.0
-```
-
 Después de pruebas y ajustes:
 ```sh
 git checkout main
