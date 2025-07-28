@@ -76,16 +76,6 @@ git merge hotfix/fix-login
 git branch -d hotfix/fix-login
 ```
 
-Después de pruebas y ajustes:
-```sh
-git checkout main
-git merge release/v1.0.0
-git tag v1.0.0  # Etiquetar la versión
-git checkout develop
-git merge release/v1.0.0
-git branch -d release/v1.0.0
-```
-
 ---
 
 ## 🎯 Resumen Visual del Flujo de Ramas
