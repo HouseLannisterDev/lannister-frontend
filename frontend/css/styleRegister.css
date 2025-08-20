@@ -1,0 +1,147 @@
+/* Overlay general */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+/* Modal de registro */
+.register-modal {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    animation: fadeIn 0.4s ease;
+}
+
+.register-modal h2 {
+    font-size: 1.6rem;
+    color: #004080;
+    margin-bottom: 10px;
+}
+
+.register-modal p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.register-modal input[type="text"],
+.register-modal input[type="email"],
+.register-modal input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.register-modal input:focus {
+    border-color: #004080;
+    box-shadow: 0 0 8px rgba(0,64,128,0.2);
+}
+
+/* Botones */
+.register-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.register-buttons button {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#register-accept {
+    background: #004080;
+    color: #fff;
+}
+
+#register-accept:hover {
+    background: #003366;
+}
+
+#register-cancel {
+    background: #ccc;
+    color: #333;
+}
+
+#register-cancel:hover {
+    background: #999;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+    .register-modal {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+.show-password {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #333;
+    justify-content: flex-start;
+}
+
+.show-password input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.terms-container {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.terms-container input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.terms-container a {
+    color: #004080;
+    text-decoration: underline;
+}
+
+.terms-container a:hover {
+    color: #00264d;
+}

@@ -1,0 +1,62 @@
+1. Estructura base del proyecto cubriendo lo que se usara de una forma abstracta (posiblemente existan cambios), 
+   aún no se ha implementado nada
+   ni se ha configurado el Node +python ni la base de datos, tener en cuenta que se usara
+   Node.js + Express para el backend y Python + algoritmo de berth para el ChatBot, mysql
+   y mongoDB y html, css y js para el frontend.
+
+   La presente carpeta contiene unos archivos prueba en la ruta backend/routes/suscripciones
+   para probar el guardado de correos electronicos en formato json que luego se guardara o pasara
+   a la base de datos cuando se despliegue el proyecto. Para hacer prueba de este siga los siguientes pasos:
+
+   // EN CONSOLA O TERMINAL DE SU EQUIPO
+
+   * npm install express
+   * npm install nodemon --save-dev
+   
+   Y para lanzar o ejecutar el servidor local creado sencillamente en la terminal digite:
+
+   * node backend/routes/suscripciones.js
+
+   También use la libreria bcrypt para el manejo de contraseñas, para instalarla use, de forma local:
+   * npm install bcrypt
+   * npm install multer
+
+
+
+   USER ADMIN
+
+   AdministradorABS
+   admin123administradorcito
+
+
+Para el bot pongan en backend pip install flask flask-cors para la interacción de está madre de bot
+
+Cree un entorno virtual con python3 -m venv venv en la carpeta scripts del backend y luego
+en consola source venv/bin/activate
+
+
+
+2. Hay que documentar bien el bot ya se actualiza en tiempo real dependiendo lo que el administrador le cargue
+tengo pensado que en estadísticas se vea los suscriptores que hemos tenido, claro que eso tendría un json distinto
+que ya existe y mostraría cuantos subs van de cierto mes a cierto mes por eso tiene el caracter de fecha y también en estadísticas
+por ejemplo llevar un registro de las preguntas que han hecho los usuarios.
+
+no cambien el nombre del admin 
+
+Para la API de cloud google music tenemos que hacer en linux 
+export YOUTUBE_API_KEY="AIzaSyDAAqFTNPy9sH6WTELK-cCLfNYtFy-h5W0"
+es de dominio publico creada y editada por mi no se preocupen y si queremos permanente lo que hice fue en consola/terminal
+
+pip install requests
+
+**para zsh que use yo** 
+
+echo 'export YOUTUBE_API_KEY="AIzaSyDAAqFTNPy9sH6WTELK-cCLfNYtFy-h5W0"' >> ~/.zshrc
+source ~/.zshrc
+
+
+**para bash** 
+echo 'export YOUTUBE_API_KEY="AIzaSyDAAqFTNPy9sH6WTELK-cCLfNYtFy-h5W0"' >> ~/.bashrc
+source ~/.bashrc
+
+sino queremos api usemos scraping sencillo pip install yt_dlp

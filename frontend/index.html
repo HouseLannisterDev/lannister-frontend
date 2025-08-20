@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casterly Rock</title>
+    <link rel="icon" type="image/png" href="./assets/LionLogo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@700&display=swap" rel="stylesheet">
+
+
+
+    <link rel="stylesheet" href="./css/styleGeneral.css">
+    <link rel="stylesheet" href="./css/styleAge.css">
+    <link rel="stylesheet" href="./css/styleCHATBOOT.css">
+    <link rel="stylesheet" href="./css/styleCategory.css">
+    <link rel="stylesheet" href="./css/styleSuscribe.css">
+    <link rel="stylesheet" href="./css/styleLogoMedia.css">
+    <link rel="stylesheet" href="./css/styleLogin.css">
+    <link rel="stylesheet" href="./css/styleRegister.css">
+    <link rel="stylesheet" href="./css/editProfileMenu.css">
+    <link rel="stylesheet" href="./css/notifier.css">
+    <link rel="stylesheet" href="./css/pagination.css">
+    <link rel="stylesheet" href="./css/optionsadmin.css">
+
+    
+</head>
+<body>
+
+    <!-- MODAL CONTROL DE EDAD -->
+     <div id="age-overlay" class="overlay">
+        <div class="age-modal">
+            <h2>AVISO IMPORTANTE</h2>
+            <p>Eres mayor de 18 años ?</p>
+            <div class="buttons">
+                <button id="btn-yes">Sí</button>
+                <button id="btn-no">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA -->
+    <div class="category-bar">
+        <div class="category-scroll">
+            <span class="category-item Latinoamerica">Latinoamerica</span>
+            <span class="category-item Política">Política</span>
+            <span class="category-item Cultura">Cultura</span>
+            <span class="category-item Deporte">Deporte</span>
+            <span class="category-item Finanzas">Finanzas</span>
+            <span class="category-item Educación">Educación</span>
+            <span class="category-item Economía">Economía</span>
+            <span class="category-item Ética">Ética</span>
+            <span class="category-item Tecnologia">Tecnologia</span>
+            <span class="category-item Innovación">Innovación</span>
+            <span class="category-item Universo">Universo</span>
+ 
+        </div>
+    </div>
+
+    <!-- TITULO -->
+    <header class="header">
+        
+        <div class="menu-icon" id="menu-btn">
+            &#9776; <!-- Icono de menú -->
+        </div>
+
+        <div class="logo-container">
+            <div class="logo">LANNISTER NEWS</div>
+            <div class="datetime" id="datetime">a</div>
+        </div>
+        
+        
+        <div class="header-buttons">
+            <button class="btn-subscribe">SUSCRÍBTE</button>
+            <button class="btn-login">INICIAR SESIÓN</button>
+
+            <!-- AVATAR USER AND MENU-->
+
+            <div id="user-section" class="user-section" style="display: none;">
+
+                <img src="" alt="" class="user-avatar" id="user-avatar">
+                <div class="user-menu" id="user-menu">
+                    <ul>
+                        <li id="edit-profile">Editar perfil</li>
+                        <li id="logout-btn">Cerrar sesión</li>
+                    </ul>
+            </div>
+
+
+        </div>
+
+    </header>
+
+    <nav id="side-menu" class="side-menu">
+        <button class="close-btn" id="close-menu">✕</button>
+
+        <!-- TITLE -->
+         <h3 class="menu-title">Categorías</h3>
+
+        <ul>
+            <li>Muertes Judiciales</li>
+            <li>Deportes</li>
+            <li>Animales</li>
+            <li>Política</li>
+            <li>Moda</li>
+        </ul>
+
+        <div class="side-footer">
+
+            <div class="social-icons">
+                <img src="./assets/youtube.png" alt="Youtube" class="social-icon">
+                <img src="./assets/instagram.png" alt="Instagram" class="social-icon">
+            </div>
+
+            <a href="./assets/TérminosCondiciones.pdf" target="_blank" class="terms">Términos y condiciones</a>
+            <p class="empty-space">&nbsp;</p> <!-- ESPACE NOT BROKEN, NOT DELETE !!-->
+
+        </div>
+
+    </nav>
+
+
+    <!-- NOTICIAS AQUÍ -->
+
+    <!-- LÓGICA DE VENTANAS DESLIANTES EN EL DISEÑO pagination.css y controlador.js--> 
+
+
+
+
+    <main id="news-container">
+        <!-- Noticias dinámicas aquí -->
+    </main>
+
+    <div id="pagination" class="pagination">
+
+    </div>
+
+
+    <!-- EN SCRIPT CONTROLADOR ES DÓNDE SE CARGARAN LAS NOTICIAS DEL SCRAPING DESDE EL BACKEND-->
+
+
+
+
+
+
+
+
+
+
+
+    <footer>
+        <p>© 2025 Noticias</p>
+    </footer>
+    
+    
+    <!-- BOTÓN FLOTANTE CHATBOT -->
+    <button class="chatbot-button" id="open-chatbot">
+        <img src="./assets/chatBOOT.png" alt="ChatBot" style="width: 50px; height: 50px;" />
+    </button>
+
+    <!-- Ventana de ChatBot -->
+    <div class="chatbot-window" id="chatbot-window">
+        <div class="chat-header">
+            <span>Lannister Boot</span>
+            <button id="close-chat">✕</button>
+        </div>
+        
+        <div class="chat-body" id="chat-body">
+            <p class="bot-msg">¡Hola! ¿En qué puedo ayudarte?</p>
+        </div>
+        
+        <div class="chat-footer">
+            <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
+            <button id="send-btn">➤</button>
+        </div>
+    </div>
+
+
+
+    <!-- MODAL SUSCRIPTION -->
+     <div id="subscribe-overlay" class="overlay" style="display: none;">
+
+        <div class="subscribe-modal">
+
+            <h2 id="text-suscribete">!Suscríbete!</h2>
+            <p> Ingresa tu correo para recibir novedades </p>
+
+            <input type="email" id="email-input" placeholder="ejemplo@correo.com" required>
+            <div class="subscribe-buttons">
+                <button id="subscribe-accept">Aceptar</button>
+                <button id="subscribe-cancel">Cancelar</button>
+            </div>
+
+        </div>
+
+     </div>
+
+
+
+     <!-- MODAL LOGIN -->
+      <div id="login-overlay" class="overlay" style="display: none;">
+
+        <div class="login-modal">
+
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa tus credenciales</p>
+
+            <input type="text" id="username" placeholder="Usuario" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+
+            <div class="login-buttons">
+                <button id="login-accept">Ingresar</button>
+                <button id="login-cancel">Cancelar</button>
+            </div>
+
+            <p class="register-text">¿ No tienes cuenta? <a href="#" id="open-register">Regístrate</a></p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- MODAL REGISTER -->
+
+      <div id="register-overlay" class="overlay" style="display: none;">
+
+        <div class="register-modal">
+            <h2>Regístrate</h2>
+            <p>Crea tu cuenta</p>
+
+            <input type="text" id="reg-username" placeholder="Usuario" required>
+
+            <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+            <input type="text" id="reg-firstname" placeholder="Nombre" required>
+            <input type="text" id="reg-lastname" placeholder="Apellido" required>
+            <input type="text" id="reg-phone" placeholder="Teléfono +57" required>
+            <input type="password" id="reg-password" placeholder="Contraseña" required>
+            <input type="password" id="reg-confirm-password" placeholder="Confirmar contraseña" required>
+
+            <div class="show-password">
+                <input type="checkbox" id="toggle-passwords">
+                <label for="toggle-passwords">Mostrar contraseñas</label>
+            </div>
+
+            <div class="terms-container">
+                <input type="checkbox" id="accept-terms">
+
+                <label for="accept-terms">
+                    Acepto los <a href="./assets/TérminosCondiciones.pdf" target="_blank">Términos y Condiciones</a>
+                </label>
+
+            </div>
+
+
+
+            <div class="register-buttons">
+                <button id="register-accept">Registrarse</button>
+                <button id="register-cancel">Cancelar</button>
+            </div>
+
+        </div>
+      </div>
+      
+
+
+      
+      <!-- PANEL DE USUARIO  -->
+    
+      <div id="user-panel" class="user-panel" style="display: none;">
+
+        <div class="panel-container"> 
+
+            <!-- Botón de cierre fuera del encabezado para posición fija -->
+             <button id="close-panel" class="close-btn" title="Cerrar">×</button>
+
+             <div class="panel-header">
+                
+            </div>
+            
+            <div class="panel-tabs">
+                <button class="tab-btn active" data-tab="profile-tab">Perfil</button>
+                <button class="tab-btn" data-tab="favorites-tab">Favoritos</button>
+
+                <!-- ADMIN PART -->
+                <button class="tab-btn" data-tab="pqrsf-tab" id="pqrsf-tab-btn" style="display:none;">PQRSF</button>
+                <button class="tab-btn" data-tab="estadisticas-tab" id="estadisticas-tab-btn" style="display: none;">Estadísticas</button>
+                <button class="tab-btn" data-tab="noticias-tab" id="noticias-tab-btn" style="display: none;">Noticias</button>
+                <button class="tab-btn" data-tab="usuarios-tab" id="usuarios-tab-btn" style="display: none;">Usuarios</button>
+
+            </div>
+            
+            
+            <div class="panel-content sesion-modal">
+                
+                <!-- PERFIL -->
+                 
+                <div id="profile-tab" class="tab-content active">
+                    
+                    <h3>Editar Perfil</h3>
+                    
+                    <div class="profile-section">
+                        
+                        <img id="profile-avatar" alt="Avatar" class="profile-avatar">
+
+                        <label for="avatar-upload" class="upload-btn">Cambiar foto</label>
+                        
+                        <input type="file" id="avatar-upload" accept="image/*">
+                    
+                    </div>
+
+                    
+                    
+                    <p><strong>Nombre de usuario:</strong> <span id="display-username"></span></p>
+                    <form id="profile-form">
+
+                        <input type="email" id="edit-email" placeholder="Correo electrónico" required>
+                        <input type="text" id="edit-nombre" placeholder="Nombre" required>
+                        <input type="text" id="edit-apellido" placeholder="Apellido" required>
+                        <input type="tel" id="edit-telefono" placeholder="Teléfono" required>
+
+                        <!-- CAMBIAR PASSOWRD -->
+                        <input type="password" id="edit-current-password" placeholder="Contraseña actual" required>
+                        <input type="password" id="edit-new-password" placeholder="Nueva contraseña (opcional)">
+                        <input type="password" id="edit-confirm-new-password" placeholder="Confirmar nueva contraseña (opcional)">
+
+                        
+                        <button type="submit" class="action-btn save-btn" id="save-profile-btn">Guardar Cambios</button>
+                    </form>
+                </div>
+
+                
+                <!-- FAVORITOS -->
+                 
+                <div id="favorites-tab" class="tab-content">
+                    
+                    <h3>Noticias Favoritas</h3>
+                    <p class="info-text">Aquí aparecerán tus noticias favoritas (Próximamente).</p>
+                    
+                </div>
+
+
+                
+                <!-- PQRSF ADMINISTRADOR -->
+                 <div id="pqrsf-tab" class="tab-content">
+                    <h3>PQRSF</h3>
+                    <p class="info-text">Ingresar entradas y salidas para el bot</p>
+
+                    <form id="pqrsfForm" class="pqrsf-form">
+
+                        <div>
+                            <label for="entrada">Entrada</label>
+                            <input type="text" id="entrada" name="entrada" placeholder="Texto que el usuario dirá...">
+                        </div>
+
+                        <div>
+                            <label for="salida">Salida</label>
+                            <textarea id="salida" name="salida" placeholder="Respuesta del bot..."></textarea>
+                        </div>
+                        
+                        <button type="button" class="save-btn" id="guardarPQRSF">Guardar</button>
+
+                         <!-- Manda al server-->
+                        <a href="/chatbot-data" target="_blank" class="bot-dictionary-link">
+                            Ver diccionario de bot
+                        </a>
+
+                    </form>
+
+                 </div>
+
+                 <!-- ESTADISTICAS ADMIN-->
+                  <div id="estadisticas-tab" class="tab-content">
+
+                    <h3>Estadísticas</h3>
+                    <p class="info-text">Aquí se verán las estadísticas</p>
+                    
+                  </div> 
+
+
+                  <!-- NOTICIAS ADMIN-->
+
+                  <div id="noticias-tab" class="tab-content">
+
+                    <h3>Noticias</h3>
+                    <p class="info-text">Aquí se podrá agregar links para entrenar a la iA respecto a noticias</p>
+
+                  </div>
+
+
+                  <!-- USUARIOS ADMIN-->
+                   <div id="usuarios-tab" class="tab-content">
+                    <h3>Usuarios</h3>
+                    <p class="info-text">Gestión de usuarios</p>
+
+
+                    <div id="modalConfirm"></div>
+
+
+
+                    <div id="usuarios-list"></div>
+                    <div id="paginacion" style="margin-top: 10px; text-align: center;"></div>
+
+                   </div>
+                   
+             </div>
+
+         </div>
+
+         
+    </div>
+
+
+
+
+
+    <!-- NOTIFICACIONES -->
+     <div id="notifier"></div>
+
+
+
+
+    
+    <script src="./js/controlador.js"></script>
+    <script src="./js/controlEdad.js"></script>
+    <script src="./js/chatbot.js"></script>
+    <script src="./js/news.js"></script>
+    <script src="./js/suscribe.js"></script>
+    <script src="./js/login.js"></script>
+    <script src="./js/register.js"></script>
+    <script src="./js/clock.js"></script>
+    <script src="./js/notifier.js"></script>
+    <script src="./js/notifierPanelUser.js"></script>
+    <script src="./js/PQRSF.js"></script>
+    <script src="./js/EDICIONUSUARIOS.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+/* Footer del menú lateral */
+.side-footer {
+    margin-top: auto; /* Empuja hacia el fondo */
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+.terms {
+    font-size: 14px;
+    color: #555;
+    transition: color 0.3s;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.terms:hover {
+    color: #004080;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Responsive ajustes */
+@media (max-width: 480px) {
+    .social-icon {
+        width: 28px;
+        height: 28px;
+    }
+}

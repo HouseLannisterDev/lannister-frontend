@@ -1,0 +1,202 @@
+/* CONTENEDOR GENERAL */
+.user-panel {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fondo oscuro translúcido */
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* PANEL INTERNO */
+.panel-container {
+  background: #ffffff;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative; /* necesario para posicionar la X respecto al panel */
+}
+
+/* Botón de cierre (X) con posición absoluta respecto al panel-container */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease-in-out;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+}
+
+
+/* HEADER */
+.panel-header {
+  background: #004080;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* TABS */
+.panel-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.tab-btn:hover {
+  background: #e8f0ff;
+}
+
+.tab-btn.active {
+  background: #dbeaff;
+  color: #004080;
+  border-bottom: 2px solid #004080;
+}
+
+/* CONTENIDO */
+.panel-content {
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* TABS CONTENT */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* AVATAR Y FOTO */
+.profile-section {
+  display: flex;
+  flex-direction: column; /* uno debajo del otro */
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #004080;
+  margin-bottom: 10px;
+}
+
+.upload-btn {
+  background: #004080;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+
+.upload-btn:hover {
+  background: #003060;
+}
+
+#avatar-upload {
+  display: none;
+}
+
+/* FORMULARIO */
+#profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#profile-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* BOTONES DE ACCIÓN */
+.action-btn {
+  background: #004080;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.action-btn:hover {
+  background: #003060;
+}
+
+.info-text {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+/* BOTÓN DE CIERRE */
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+}
+
+
+/* ANIMACIÓN */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

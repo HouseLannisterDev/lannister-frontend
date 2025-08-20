@@ -1,0 +1,20 @@
+.subscribe-message {
+    margin-bottom: 15px;
+    padding: 7px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+}
+
+.subscribe-message.success {
+    background-color: #e0f7e9;
+    color: #006633;
+    border: 1px solid #00994d;
+}
+
+.subscribe-message.error {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 1px solid #cc0000;
+}

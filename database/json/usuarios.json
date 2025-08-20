@@ -1,0 +1,20 @@
+[
+  {
+    "usuario": "AdministradorABS",
+    "email": "administradorLannisterNewsUPB@gmail.com",
+    "nombre": "Admin",
+    "apellido": "Géstor de la página",
+    "telefono": "1234567890",
+    "contrasena": "$2b$10$Jsg5G/CbcsqCLQxcn/i4Luf6eCt4vh7Z0FWWYLUToxjFn5D0es4me",
+    "foto": "AdministradorABS.jpg"
+  },
+  {
+    "usuario": "Samuel",
+    "email": "samuelPruebaPut@gmail.com",
+    "nombre": "Samuel Putsito",
+    "apellido": "Arango Diaz",
+    "telefono": "0001116661",
+    "contrasena": "$2b$10$3cpZdagpkxNN71wVqbHzyOntnHoN88TanlD.RJ2f.znMQSdo6qOcC",
+    "foto": "userIconDefault.png"
+  }
+]
