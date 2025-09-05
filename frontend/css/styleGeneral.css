@@ -124,7 +124,8 @@ body.loaded #age-overlay {
 }
 
 .btn-login:hover {
-    background: #f1f1f1;
+    background: #004080;
+    color: white;
 }
 
 /* ----------------------------- */
@@ -255,3 +256,57 @@ body.loaded #age-overlay {
 .user-menu li:hover {
     background: #f4f4f4;
 }
+
+
+/* ----------------------------- */
+/* PAGINATION */
+/* Estilos para los botones de me encanta */
+/* Tarjeta preparada para botón flotante */
+.news-card {
+  position: relative; /* importante para posicionar el botón */
+}
+
+/* Botón guardar tipo “reel” */
+.save-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  background: #ffffff;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+
+/* efecto hover */
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.16);
+}
+
+/* icono (SVG) */
+.save-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: fill .2s ease, stroke .2s ease;
+  stroke: #333;
+  fill: none;
+}
+
+/* estado guardado (relleno) */
+.save-btn.saved svg {
+  stroke: #0d6efd;   /* borde azul */
+  fill: #0d6efd;     /* relleno azul */
+}
+
+/* accesibilidad para focus via teclado */
+.save-btn:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+

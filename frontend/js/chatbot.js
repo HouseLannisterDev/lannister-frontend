@@ -1,12 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const chatBtn = document.getElementById('open-chatbot');
-  const chatWindow = document.getElementById('chatbot-window');
-  const closeBtn = document.getElementById('close-chat');
-  const sendBtn = document.getElementById('send-btn');
-  const userInput = document.getElementById('user-input');
-  const chatBody = document.getElementById('chat-body');
+  const chatBtn     = document.getElementById('open-chatbot');
+  const chatWindow  = document.getElementById('chatbot-window');
+  const closeBtn    = document.getElementById('close-chat');
+  const sendBtn     = document.getElementById('send-btn');
+  const userInput   = document.getElementById('user-input');
+  const chatBody    = document.getElementById('chat-body');
 
-  let currentAudio = null;
+  function appendUserMessage(text) {
+    const p = document.createElement('p');
+    p.classList.add('user-msg');
+    p.textContent = text;
+    chatBody.appendChild(p);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function appendBotMessage(text) {
+    const p = document.createElement('p');
+    p.classList.add('bot-msg');   // CSS con white-space: pre-line
+    p.textContent = text;         // seguridad + respeta \n
+    chatBody.appendChild(p);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    appendUserMessage(message);
+    userInput.value = '';
+
+    try {
+      const response = await fetch('http://localhost:5000/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json();
+      appendBotMessage(data.response || '');
+    } catch (err) {
+      console.error('Error al contactar al chatbot:', err);
+      appendBotMessage('Ups, tuve un problema al responder. Intenta de nuevo en un momento 🙏');
+    }
+  }
 
   chatBtn.addEventListener('click', () => {
     chatWindow.style.display = 'flex';
@@ -16,75 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     chatWindow.style.display = 'none';
   });
 
-  sendBtn.addEventListener('click', async () => {
-
-    const message = userInput.value.trim();
-    if (message) {
-      const userMsg = document.createElement('p');
-      userMsg.classList.add('user-msg');
-      userMsg.textContent = message;
-      chatBody.appendChild(userMsg);
-      chatBody.scrollTop = chatBody.scrollHeight;
-      userInput.value = '';
-
-      try {
-        const response = await fetch('http://localhost:5000/api/chatbot', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
-        });
-
-        const data = await response.json();
-
-        const botMsg = document.createElement('p');
-        botMsg.classList.add('bot-msg');
-        botMsg.innerHTML = data.response;
-        chatBody.appendChild(botMsg);
-        chatBody.scrollTop = chatBody.scrollHeight;
-
-        if (data.music) {
-
-
-          if(currentAudio){
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-          }
-
-          currentAudio = document.createElement('audio');
-          currentAudio.src = `http://localhost:5000/api/music/${encodeURIComponent(data.music)}`;
-          currentAudio.controls = true;
-          currentAudio.autoplay = true;
-          currentAudio.style.marginTop = '10px';
-          
-          chatBody.appendChild(currentAudio);
-          chatBody.scrollTop = chatBody.scrollHeight;
-        }
-
-        //YOUTUBE
-        if(data.youtube_id){
-
-          const iframe = document.createElement('iframe');
-          iframe.width = "250"; 
-          iframe.height = "170";
-          iframe.src = `https://www.youtube.com/embed/${data.youtube_id}`;
-          iframe.frameBorder = "0";
-          iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-          iframe.allowFullscreen = true;
-          iframe.style.marginTop = '10px';
-
-          chatBody.appendChild(iframe);
-          chatBody.scrollTop = chatBody.scrollHeight;
-        }
-
-      } catch (error) {
-        console.error('Error al contactar al chatbot:', error);
-      }
-    }
-  });
-
+  sendBtn.addEventListener('click', sendMessage);
   userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendBtn.click();
-    }
+    if (e.key === 'Enter') sendMessage();
   });
 });

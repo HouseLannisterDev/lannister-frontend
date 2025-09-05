@@ -33,18 +33,11 @@ const suscripcionesRoute = require('./routes/suscripciones');
 const loginRoutes = require('./routes/entrada');
 const editarPerfilRoute = require('./routes/editarPerfil');
 
-//Rutas opciones admin
-const pqrsfRoute = require('./routes/pqrsf');
-const usuariosRoute = require('./routes/traerUsuarios');
-
-
 // Usar rutas
 app.use(registroRoute);
 app.use(suscripcionesRoute);
 app.use(loginRoutes);
 app.use(editarPerfilRoute);
-app.use(pqrsfRoute);
-app.use(usuariosRoute);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));

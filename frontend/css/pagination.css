@@ -1,33 +1,156 @@
-.news-card {
-  transition: transform 0.5s ease, opacity 0.5s ease;
+/* pagination.css (refinado para encajar con el estilo general) */
+
+/* Contenedor principal: usa grid responsive y permite la animación de entrada */
+#news-container {
+  position: relative;
+  padding: 20px;                      /* coincide con tu general.css */
+  display: block;                     /* evitamos conflictos con grids previas */
+  min-height: 320px;
 }
 
-.news-card.entering {
-  transform: translateX(100%);
+/* Cada “página” renderizada por JS es una grilla adaptable */
+.news-page {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* cards fluidas */
+  gap: 16px;
   opacity: 0;
+  transform: translateY(8px);
+  transition: transform 280ms ease, opacity 280ms ease;
 }
 
-.news-card.show {
-  transform: translateX(0);
+.news-page.show {
   opacity: 1;
+  transform: translateY(0);
 }
 
+/* Tarjeta de noticia */
+.news-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  border: 1px solid #eef2f7;          /* borde muy sutil */
+}
+
+.news-card h2 {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+}
+
+.news-card h2 a {
+  color: #004080;                      /* paleta de la marca */
+  text-decoration: none;
+}
+.news-card h2 a:hover {
+  text-decoration: underline;
+}
+
+.news-card p {
+  margin: 0;
+  color: #555;                         /* combina con tu general.css */
+  font-size: 14px;
+}
+
+/* Meta (categoría, fuente, fecha) */
+.news-meta {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Acción “Abrir noticia” */
+.news-actions {
+  margin-top: 12px;
+}
+.news-actions a {
+  display: inline-block;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid #004080;
+  color: #004080;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.news-actions a:hover,
+.news-actions a:focus {
+  background: #004080;
+  color: #fff;
+  border-color: #004080;
+}
+
+/* Paginación */
 .pagination {
   display: flex;
+  gap: 8px;
   justify-content: center;
-  margin-top: 1rem;
-  gap: 6px;
+  padding: 16px 0 24px;
+  flex-wrap: wrap;
 }
 
 .pagination button {
-  border: none;
-  background: #0066cc;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 5px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;                /* pills */
   cursor: pointer;
+  font-size: 14px;
+  color: #111827;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 80ms ease;
+}
+.pagination button:hover {
+  border-color: #004080;
+  color: #004080;
+  transform: translateY(-1px);
+}
+.pagination button:disabled {
+  opacity: .45;
+  cursor: default;
+  transform: none;
 }
 
 .pagination button.active {
   background: #004080;
+  color: #fff;
+  border-color: #004080;
+}
+
+.pagination .spacer {
+  padding: 8px 4px;
+  color: #6b7280;
+}
+
+/* Loader */
+.loading {
+  padding: 24px 16px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ----------------------------- */
+/* RESPONSIVE */
+/* Ajusta densidad en móviles */
+@media (max-width: 768px) {
+  .news-page {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .news-card h2 {
+    font-size: 16px;
+  }
+  .news-card p {
+    font-size: 13px;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .news-page {
+    grid-template-columns: 1fr;
+  }
 }

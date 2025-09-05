@@ -145,3 +145,65 @@
 .terms-container a:hover {
     color: #00264d;
 }
+
+/* === INPUT DATE: estilo consistente con los demás campos === */
+.register-modal input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: 0.3s;
+  box-sizing: border-box;
+
+  /* Quitar apariencia nativa y usar ícono propio */
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+
+  /* Ícono calendario (SVG inline) */
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3' y='5' width='18' height='16' rx='2' ry='2' stroke='%23999' stroke-width='2'/%3E%3Cpath d='M16 3v4M8 3v4M3 11h18' stroke='%23999' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px 20px;
+  padding-right: 44px; /* espacio para el ícono */
+}
+
+/* Foco coherente con el resto */
+.register-modal input[type="date"]:focus {
+  border-color: #004080;
+  box-shadow: 0 0 8px rgba(0,64,128,0.2);
+}
+
+/* Ocultar el picker nativo (dejamos clickeable toda el área) */
+.register-modal input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Ajuste del texto interno del date en WebKit */
+.register-modal input[type="date"]::-webkit-datetime-edit {
+  padding: 0;
+}
+
+/* Cuando el campo requerido está vacío, usa color tenue para el “formato fantasma” */
+.register-modal input[type="date"]:required:invalid {
+  color: #666; /* color del texto hasta que el usuario elija fecha */
+}
+
+/* En Chrome/Safari, controla el color del contenido editable del date */
+.register-modal input[type="date"]:required:invalid::-webkit-datetime-edit {
+  color: #9aa0a6;
+}
+
+/* En Firefox, ayuda a mantener consistencia visual */
+@-moz-document url-prefix() {
+  .register-modal input[type="date"] {
+    padding-right: 12px; /* Firefox no muestra ícono nativo igual */
+    background-image: none; /* evita ícono doble */
+  }
+}

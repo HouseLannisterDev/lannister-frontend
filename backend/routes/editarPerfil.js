@@ -65,10 +65,6 @@ router.post('/api/editar-perfil', upload.single('foto'), async (req, res) => {
     usuarios[index].apellido = apellido;
     usuarios[index].telefono = telefono;
 
-    // Si hay foto, actualizar la ruta
-    if (req.file) {
-        usuarios[index].foto = req.file.filename;
-    }
 
     fs.writeFileSync(usuariosPath, JSON.stringify(usuarios, null, 2));
 

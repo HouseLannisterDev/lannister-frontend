@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="./css/editProfileMenu.css">
     <link rel="stylesheet" href="./css/notifier.css">
     <link rel="stylesheet" href="./css/pagination.css">
-    <link rel="stylesheet" href="./css/optionsadmin.css">
 
     
 </head>
@@ -99,10 +98,10 @@
          <h3 class="menu-title">Categorías</h3>
 
         <ul>
-            <li>Muertes Judiciales</li>
+            <li>Judiciales</li>
             <li>Deportes</li>
             <li>Animales</li>
-            <li>Política</li>
+            <li>Tecnología</li>
             <li>Moda</li>
         </ul>
 
@@ -142,18 +141,13 @@
 
 
 
-
-
-
-
-
-
-
     <footer>
         <p>© 2025 Noticias</p>
     </footer>
     
     
+
+
     <!-- BOTÓN FLOTANTE CHATBOT -->
     <button class="chatbot-button" id="open-chatbot">
         <img src="./assets/chatBOOT.png" alt="ChatBot" style="width: 50px; height: 50px;" />
@@ -235,7 +229,7 @@
             <input type="email" id="reg-email" placeholder="Correo electrónico" required>
             <input type="text" id="reg-firstname" placeholder="Nombre" required>
             <input type="text" id="reg-lastname" placeholder="Apellido" required>
-            <input type="text" id="reg-phone" placeholder="Teléfono +57" required>
+            <input type="date" id="reg-birthday" placeholder="Cumpleaños 1974-12-12" required>
             <input type="password" id="reg-password" placeholder="Contraseña" required>
             <input type="password" id="reg-confirm-password" placeholder="Confirmar contraseña" required>
 
@@ -282,13 +276,6 @@
             <div class="panel-tabs">
                 <button class="tab-btn active" data-tab="profile-tab">Perfil</button>
                 <button class="tab-btn" data-tab="favorites-tab">Favoritos</button>
-
-                <!-- ADMIN PART -->
-                <button class="tab-btn" data-tab="pqrsf-tab" id="pqrsf-tab-btn" style="display:none;">PQRSF</button>
-                <button class="tab-btn" data-tab="estadisticas-tab" id="estadisticas-tab-btn" style="display: none;">Estadísticas</button>
-                <button class="tab-btn" data-tab="noticias-tab" id="noticias-tab-btn" style="display: none;">Noticias</button>
-                <button class="tab-btn" data-tab="usuarios-tab" id="usuarios-tab-btn" style="display: none;">Usuarios</button>
-
             </div>
             
             
@@ -303,14 +290,11 @@
                     <div class="profile-section">
                         
                         <img id="profile-avatar" alt="Avatar" class="profile-avatar">
-
-                        <label for="avatar-upload" class="upload-btn">Cambiar foto</label>
                         
                         <input type="file" id="avatar-upload" accept="image/*">
                     
                     </div>
 
-                    
                     
                     <p><strong>Nombre de usuario:</strong> <span id="display-username"></span></p>
                     <form id="profile-form">
@@ -318,7 +302,6 @@
                         <input type="email" id="edit-email" placeholder="Correo electrónico" required>
                         <input type="text" id="edit-nombre" placeholder="Nombre" required>
                         <input type="text" id="edit-apellido" placeholder="Apellido" required>
-                        <input type="tel" id="edit-telefono" placeholder="Teléfono" required>
 
                         <!-- CAMBIAR PASSOWRD -->
                         <input type="password" id="edit-current-password" placeholder="Contraseña actual" required>
@@ -326,7 +309,7 @@
                         <input type="password" id="edit-confirm-new-password" placeholder="Confirmar nueva contraseña (opcional)">
 
                         
-                        <button type="submit" class="action-btn save-btn" id="save-profile-btn">Guardar Cambios</button>
+                        <button type="submit" class="action-btn save-btn-profile" id="save-profile-btn">Guardar Cambios</button>
                     </form>
                 </div>
 
@@ -340,79 +323,12 @@
                     
                 </div>
 
-
-                
-                <!-- PQRSF ADMINISTRADOR -->
-                 <div id="pqrsf-tab" class="tab-content">
-                    <h3>PQRSF</h3>
-                    <p class="info-text">Ingresar entradas y salidas para el bot</p>
-
-                    <form id="pqrsfForm" class="pqrsf-form">
-
-                        <div>
-                            <label for="entrada">Entrada</label>
-                            <input type="text" id="entrada" name="entrada" placeholder="Texto que el usuario dirá...">
-                        </div>
-
-                        <div>
-                            <label for="salida">Salida</label>
-                            <textarea id="salida" name="salida" placeholder="Respuesta del bot..."></textarea>
-                        </div>
-                        
-                        <button type="button" class="save-btn" id="guardarPQRSF">Guardar</button>
-
-                         <!-- Manda al server-->
-                        <a href="/chatbot-data" target="_blank" class="bot-dictionary-link">
-                            Ver diccionario de bot
-                        </a>
-
-                    </form>
-
-                 </div>
-
-                 <!-- ESTADISTICAS ADMIN-->
-                  <div id="estadisticas-tab" class="tab-content">
-
-                    <h3>Estadísticas</h3>
-                    <p class="info-text">Aquí se verán las estadísticas</p>
-                    
-                  </div> 
-
-
-                  <!-- NOTICIAS ADMIN-->
-
-                  <div id="noticias-tab" class="tab-content">
-
-                    <h3>Noticias</h3>
-                    <p class="info-text">Aquí se podrá agregar links para entrenar a la iA respecto a noticias</p>
-
-                  </div>
-
-
-                  <!-- USUARIOS ADMIN-->
-                   <div id="usuarios-tab" class="tab-content">
-                    <h3>Usuarios</h3>
-                    <p class="info-text">Gestión de usuarios</p>
-
-
-                    <div id="modalConfirm"></div>
-
-
-
-                    <div id="usuarios-list"></div>
-                    <div id="paginacion" style="margin-top: 10px; text-align: center;"></div>
-
-                   </div>
-                   
              </div>
 
          </div>
 
          
     </div>
-
-
-
 
 
     <!-- NOTIFICACIONES -->
@@ -432,8 +348,7 @@
     <script src="./js/clock.js"></script>
     <script src="./js/notifier.js"></script>
     <script src="./js/notifierPanelUser.js"></script>
-    <script src="./js/PQRSF.js"></script>
-    <script src="./js/EDICIONUSUARIOS.js"></script>
+    <script src="./js/favoritos.js"></script>
 
 </body>
 </html>

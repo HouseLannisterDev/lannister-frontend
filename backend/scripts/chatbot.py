@@ -1,101 +1,142 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import os
 import difflib
-
-#YOUTUBE
-
-import yt_dlp
-import random
-
+import re
+import requests
 
 app = Flask(__name__)
 CORS(app)
 
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR  = os.path.dirname(__file__)
 DATA_PATH = os.path.join(BASE_DIR, '..', '..', 'database', 'seeds', 'chatbot_data.json')
-MUSIC_PATH = os.path.join(BASE_DIR, '..', '..', 'database', 'seeds', 'music')
 
+# =========================
+# CONFIG BACKEND NOTICIAS
+# =========================
+NEWS_API_BASE = "http://127.0.0.1:8000"
 
-# Playlist pública
-PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLnQk7mL7orO8SZXEDKo4xEcuEMgHjvTgO"
-
-
-# Respuestas especiales con música
-SPECIAL_MUSIC_RESPONSES = {
-    "pon música": {
-        "response": "¡Claro! Aquí va La Jumpa de Arcángel y Bad Bunny.",
-        "music_file": "Arcangel, Bad Bunny - La Jumpa (Video Oficial) SR. SANTOS.mp3"
-    },
-    "qué es esto": {
-        "response": "Esto es un recuerdo del show de Arcángel en Tenerife 2023. 🎤",
-        "music_file": "Recuerdos.mp3"
-    }
+# Mapa de categorías “visibles” -> exactas en la DB
+NEWS_CATEGORY_MAP = {
+    "deportes":    "Deportes",
+    "judiciales":  "Judiciales",
+    "animales":    "Animales",
+    "moda":        "Moda",
+    "tecnologia":  "Tecnología",
+    "tecnología":  "Tecnología",
 }
 
-#MUSICA YOUTUBE
-def get_random_song_from_playlist():
-    try:
-        ydl_opts = {
-            'quiet': True,
-            'extract_flat': True,
-            'skip_download': True
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(PLAYLIST_URL, download=False)
-            videos = [entry for entry in info.get('entries', []) if 'id' in entry]
-            if not videos:
-                return None, None
-            choice = random.choice(videos)
-            video_id = choice['id']
-            video_url = f"https://www.youtube.com/watch?v={video_id}"
-            return video_id, video_url
-    except Exception as e:
-        print(f"Error obteniendo playlist: {e}")
-        return None, None
-
-
-
-
+# =========================
+# CHATBOT DATA
+# =========================
 def load_training_data():
     try:
         with open(DATA_PATH, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
-        print(f" Error cargando datos del chatbot: {e}")
+        print(f"[chatbot] Error cargando datos del chatbot: {e}")
         return []
 
-def get_response(user_input):
+# =========================
+# HELPERS NOTICIAS
+# =========================
+def normalize_category(raw: str) -> str:
+    if not raw:
+        return ""
+    key = raw.strip().lower()
+    return NEWS_CATEGORY_MAP.get(key, raw.strip())
 
+def parse_news_query(user_input: str):
+    """
+    Patrones soportados:
+      - 'traeme noticias'            -> (5, None)
+      - 'traeme 5 noticias de moda'  -> (5, 'Moda')
+      - 'dame 3 de tecnología'       -> (3, 'Tecnología')
+      - 'noticias de animales 8'     -> (8, 'Animales')
+      - 'quiero 2 noticias'          -> (2, None)
+    """
+    text = user_input.lower()
+
+    # Detecta intención de noticias
+    if not re.search(r"\bnoticia(s)?\b", text):
+        if not re.search(r"\btra(e|é)me\b|\bdame\b|\bmostrar\b|\bquiero\b", text):
+            return None
+
+    # Número (por defecto 5)
+    m_num = re.search(r"\b(\d{1,2})\b", text)
+    count = int(m_num.group(1)) if m_num else 5
+    count = max(1, min(count, 20))
+
+    # Categoría después de 'de ...'
+    m_cat = re.search(r"\bde\s+([a-záéíóúñ]+)\b", text)
+    category = None
+    if m_cat:
+        category = normalize_category(m_cat.group(1))
+    else:
+        # O palabra suelta conocida
+        for k in NEWS_CATEGORY_MAP.keys():
+            if re.search(rf"\b{k}\b", text):
+                category = normalize_category(k)
+                break
+
+    return (count, category)
+
+def fetch_news_urls(count: int, category: str | None):
+    """
+    Llama al backend Django y devuelve lista de URLs (strings).
+    - Si category es None -> /news/random/?limit=...
+    - Si category existe  -> /news/?q=Categoria&limit=...
+    """
+    try:
+        if category:
+            params = {"q": category, "limit": str(count)}
+            url = f"{NEWS_API_BASE.rstrip('/')}/news/"
+        else:
+            params = {"limit": str(count)}
+            url = f"{NEWS_API_BASE.rstrip('/')}/news/random/"
+
+        resp = requests.get(url, params=params, timeout=6)
+        resp.raise_for_status()
+        data = resp.json()
+        if not isinstance(data, list):
+            return []
+
+        urls = []
+        for item in data[:count]:
+            urls.append(item.get("url") or "#")
+        return urls
+    except Exception as e:
+        print(f"[chatbot] Error consultando noticias: {e}")
+        return []
+
+# =========================
+# CORE RESPONSE
+# =========================
+def get_response(user_input):
     user_input = user_input.lower()
 
+    # ——— Intención de noticias ———
+    parsed = parse_news_query(user_input)
+    if parsed:
+        count, category = parsed
+        urls = fetch_news_urls(count, category)
+        if urls:
+            header = (
+                f" Aquí tienes {len(urls)} noticias de {category}:\n\n"
+                if category else
+                f" Aquí tienes {len(urls)} noticias:\n\n"
+            )
+            # Doble salto de línea entre enlaces
+            body = "\n\n".join(f"{i}. {u}" for i, u in enumerate(urls, start=1))
+            return f"{header}{body}"
 
-    # Si el usuario pide música de YouTube
-    if user_input in ["reproduce algo", "youtube"]:
-        video_id, song_url = get_random_song_from_playlist()
-        if song_url:
-            return {
-                "text": "🎵 Aquí tienes algo para ti:",
-                "youtube_url": song_url,
-                "youtube_id": video_id
-            }, None
-        else:
-            return {"text": "No pude encontrar canciones en la playlist 😢"}, None
+        return "No encontré noticias para esa consulta. Intenta con otra categoría o un número distinto."
 
-
-
-    # Revisión de respuestas musicales exactas
-    for key, val in SPECIAL_MUSIC_RESPONSES.items():
-        if key in user_input:
-            return val["response"], val["music_file"]
-
-    # Cargar datos actualizados en tiempo real
+    # ——— Similitud difusa con tu JSON ———
     training_data = load_training_data()
-
-    # Revisión con coincidencia flexible
     best_match = None
-    highest_score = 0
+    highest_score = 0.0
 
     for item in training_data:
         for phrase in item.get('input', []):
@@ -105,33 +146,22 @@ def get_response(user_input):
                 best_match = item.get('response', '')
 
     if highest_score > 0.6:
-        return best_match, None
+        return best_match
 
-    return "Lo siento, no entiendo tu pregunta. ¿Puedes decirlo de otra forma, parcero?", None
+    return "Lo siento, no entiendo tu pregunta. ¿Puedes decirlo de otra forma, parcero?"
 
+# =========================
+# ROUTES
+# =========================
 @app.route('/api/chatbot', methods=['POST'])
 def chatbot():
-    data = request.json
+    data = request.json or {}
     user_input = data.get('message', '')
-    response, music_file = get_response(user_input)
+    response_text = get_response(user_input)
+    return jsonify({'response': response_text})
 
-
-    #MUSICA 
-    # Si la respuesta es un dict (cuando hay YouTube)
-    if isinstance(response, dict):
-        return jsonify({
-            'response': response.get('text'),
-            'music': music_file,
-            'youtube_url': response.get('youtube_url'),
-            'youtube_id': response.get('youtube_id')
-    })
-
-
-    return jsonify({'response': response, 'music': music_file})
-
-@app.route('/api/music/<path:filename>')
-def get_music(filename):
-    return send_from_directory(MUSIC_PATH, filename)
-
+# =========================
+# MAIN
+# =========================
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

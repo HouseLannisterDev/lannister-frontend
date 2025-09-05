@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalInicio = document.querySelector('.sesion-modal');
 
 
-    //ACtualizar fotos
+    //Actualizar fotos
     function actualizarAvatares(foto){
         const defaultFoto = '/fotos/userIconDefault.png';
         const rutaFinal = foto ? `/fotos/${foto}` : defaultFoto;
@@ -96,11 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
 
-                //verificar si es admin
-                if(currentUser.usuario === "AdministradorABS"){
-                    admin();
-                }
-
                 // Editar perfil
                 editProfileBtn.addEventListener('click', () => {
                     userMenu.style.display = 'none';
@@ -126,20 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
-                // Visualización de avatar local
-                document.getElementById('avatar-upload').addEventListener('change', (e) => {
-
-                    const file = e.target.files[0];
-                    
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            actualizarAvatares(reader.result);
-                            
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
 
                 // Guardar cambios de perfil
                 document.getElementById('profile-form').addEventListener('submit', async (e) => {
@@ -166,11 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     formData.append('newPassword', document.getElementById('edit-new-password').value);
                     formData.append('confirmNewPassword', document.getElementById('edit-confirm-new-password').value);
 
-
-                    const foto = document.getElementById('avatar-upload').files[0];
-                    if (foto) {
-                        formData.append('foto', foto);
-                    }
+ 
 
                     try {
                         const response = await fetch('/api/editar-perfil', {
@@ -229,34 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
         userMenu.style.display = 'none';
         userPanel.style.display = 'none';
         currentUser = {};
-        removeAdminUI();
         showNotification('Has cerrado sesión correctamente.', 'success', modalSelector);
     }
 
-    function admin(){
 
-        const pqrsfTabBtn = document.getElementById('pqrsf-tab-btn');
-        const estadisticasTabBtn = document.getElementById('estadisticas-tab-btn');
-        const noticiasTabBtn = document.getElementById('noticias-tab-btn');
-        const usuariosTabBtn = document.getElementById('usuarios-tab-btn');
-
-        if (pqrsfTabBtn) pqrsfTabBtn.style.display = 'block';
-        if (estadisticasTabBtn) estadisticasTabBtn.style.display = 'block';
-        if(noticiasTabBtn) noticiasTabBtn.style.display = 'block';
-        if(usuariosTabBtn) usuariosTabBtn.style.display = 'block';
-
-    }
-
-    function removeAdminUI(){
-        const pqrsfTabBtn = document.getElementById('pqrsf-tab-btn');
-        const estadisticasTabBtn = document.getElementById('estadisticas-tab-btn');
-        const noticiasTabBtn = document.getElementById('noticias-tab-btn');
-        const usuariosTabBtn = document.getElementById('usuarios-tab-btn');
-
-
-        if (pqrsfTabBtn) pqrsfTabBtn.style.display = 'none';
-        if (estadisticasTabBtn) estadisticasTabBtn.style.display = 'none';
-        if (noticiasTabBtn) noticiasTabBtn.style.display = 'none';
-        if (usuariosTabBtn) usuariosTabBtn.style.display = 'none';
-    }
 });

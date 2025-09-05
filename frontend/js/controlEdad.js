@@ -10,10 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnNo.addEventListener('click', () => {
-        
-        overlay.style.display = 'none';
-        document.body.classList.add('loaded');
-        // Podrías redirigir a otra página:
-        // window.location.href = 'contenido-para-menores.html';
+        window.location.href = 'https://www.google.com';
     });
 });
