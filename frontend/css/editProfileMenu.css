@@ -200,3 +200,168 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+
+
+/* ===== Favoritos (panel) ===== */
+#favorites-tab {
+  --fav-radius: 10px;
+  --fav-gap: 8px;
+  --fav-pad: 10px 12px;
+  --fav-border: 1px solid hsl(0 0% 90% / .8);
+  --fav-bg: hsl(0 0% 100% / .7);
+  --fav-bg-hover: hsl(0 0% 98%);
+  --fav-remove-hover: hsl(0 84% 60% / .12);
+  --fav-remove-active: hsl(0 84% 60% / .22);
+  --fav-shadow: 0 1px 1px hsl(0 0% 0% / .03), 0 2px 6px hsl(0 0% 0% / .04);
+}
+
+#favorites-tab h3 {
+  margin: 0 0 .5rem;
+  font-size: 1.05rem;
+}
+
+#favorites-tab .info-text {
+  margin: .25rem 0 0;
+  color: #6b7280;
+  font-size: .9rem;
+}
+
+/* Lista numerada bonita y compacta */
+#favorites-tab .favorites-list {
+  margin: .25rem 0 .75rem 1.25rem; /* conserva numeración */
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+/* Cada fila como “chip”/card */
+#favorites-tab .fav-row {
+  list-style: decimal;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--fav-gap);
+  padding: var(--fav-pad);
+  border: var(--fav-border);
+  border-radius: var(--fav-radius);
+  background: var(--fav-bg);
+  box-shadow: var(--fav-shadow);
+  transition: background-color .15s ease, border-color .15s ease, transform .05s ease;
+}
+
+#favorites-tab .fav-row:hover {
+  background: var(--fav-bg-hover);
+  border-color: hsl(0 0% 86%);
+}
+
+#favorites-tab .fav-row:active {
+  transform: translateY(1px);
+}
+
+/* Enlace: una sola línea con elipsis, subrayado sutil al pasar */
+#favorites-tab .fav-row a {
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#favorites-tab .fav-row a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: .08em;
+  text-underline-offset: .18em;
+}
+
+/* Botón quitar (✕) */
+#favorites-tab .fav-remove {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  color: #ef4444;           /* rojo suave para el icono */
+  opacity: .85;
+  transition: background-color .15s ease, opacity .15s ease, transform .05s ease;
+}
+
+#favorites-tab .fav-row:hover .fav-remove { opacity: 1; }
+
+#favorites-tab .fav-remove:hover   { background: var(--fav-remove-hover); }
+#favorites-tab .fav-remove:active  { background: var(--fav-remove-active); transform: scale(.98); }
+#favorites-tab .fav-remove:focus-visible {
+  outline: 2px solid hsl(0 84% 60% / .5);
+  outline-offset: 2px;
+}
+
+/* Paginador */
+#favorites-tab .favorites-pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .5rem;
+  user-select: none;
+}
+
+#favorites-tab .favorites-pager button {
+  min-width: 36px;
+  height: 32px;
+  padding: 0 .5rem;
+  border-radius: 8px;
+  border: 1px solid hsl(0 0% 88%);
+  background: #fff;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, transform .05s ease;
+}
+
+#favorites-tab .favorites-pager button:hover {
+  background: hsl(0 0% 97%);
+  border-color: hsl(0 0% 82%);
+}
+
+#favorites-tab .favorites-pager button:active { transform: translateY(1px); }
+
+#favorites-tab .favorites-pager button[disabled] {
+  opacity: .45;
+  cursor: default;
+  transform: none;
+}
+
+#favorites-tab .fav-page {
+  font-variant-numeric: tabular-nums;
+  font-size: .92rem;
+  color: #4b5563;
+}
+
+/* Modo oscuro (si usas .dark en body o html) */
+.dark #favorites-tab {
+  --fav-border: 1px solid hsl(220 14% 25%);
+  --fav-bg: hsl(220 13% 18% / .7);
+  --fav-bg-hover: hsl(220 13% 20% / .9);
+  --fav-shadow: 0 1px 1px hsl(0 0% 0% / .2);
+}
+
+.dark #favorites-tab .info-text   { color: hsl(215 20% 70%); }
+.dark #favorites-tab .fav-remove  { color: hsl(0 84% 70%); }
+.dark #favorites-tab .favorites-pager button {
+  background: hsl(220 13% 18%);
+  border-color: hsl(220 14% 25%);
+  color: hsl(220 15% 85%);
+}
+.dark #favorites-tab .favorites-pager button:hover {
+  background: hsl(220 13% 22%);
+  border-color: hsl(220 14% 30%);
+}
+.dark #favorites-tab .fav-page { color: hsl(215 20% 78%); }
+
+/* Responsivo fino */
+@media (max-width: 420px) {
+  #favorites-tab .fav-row { padding: 8px 10px; }
+  #favorites-tab .fav-remove { width: 26px; height: 26px; }
+}

@@ -65,7 +65,11 @@
 /* Acción “Abrir noticia” */
 .news-actions {
   margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;     
 }
+
 .news-actions a {
   display: inline-block;
   font-size: 13px;
@@ -153,4 +157,32 @@
   .news-page {
     grid-template-columns: 1fr;
   }
+}
+
+.sentiment-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111;
+  background: #e5e7eb;  /* gris neutro */
+  border: 1px solid transparent;
+}
+
+/* Colores */
+.sentiment-pos {
+  background: #22c55e30;   /* verde claro */
+  border-color: #22c55e80;
+  color: #065f46;
+}
+.sentiment-neu {
+  background: #fbbf2430;   /* amarillo claro */
+  border-color: #fbbf2480;
+  color: #78350f;
+}
+.sentiment-neg {
+  background: #ef444430;   /* rojo claro */
+  border-color: #ef444480;
+  color: #7f1d1d;
 }

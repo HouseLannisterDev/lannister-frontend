@@ -1,33 +1,33 @@
-// controlador.js (Opción A - Backend Django)
+// /js/controlador.js  (Backend Django)
 document.addEventListener('DOMContentLoaded', () => {
   const container   = document.getElementById('news-container');
   const pagination  = document.getElementById('pagination');
   const sideMenu    = document.getElementById('side-menu');
   const pageSize    = 10;
 
-  // ==== OPCIÓN A: BACKEND DJANGO ====
-  const API_BASE     = 'http://127.0.0.1:8000'; // tu backend local
+  const API_BASE     = 'http://127.0.0.1:8000'; // backend de noticias
   const USE_BACKEND  = true;
 
-  // Mapea el nombre visible del menú → categoría exacta en la DB
   const CATEGORY_MAP = {
-    'deportes':    'Deportes',
-    'judiciales':  'Judiciales',
-    'animales':    'Animales',
-    'moda':        'Moda',
-    'tecnologia':  'Tecnología',
-    'tecnología':  'Tecnología',
+    'deportes':   'Deportes',
+    'judiciales': 'Judiciales',
+    'animales':   'Animales',
+    'moda':       'Moda',
+    'tecnología': 'Tecnología',
+    // 'todos' se maneja con string vacío para pedir random
   };
 
-  let noticiasData    = [];
-  let currentPage     = 1;
-  let currentCategory = ''; // nombre "real" que se mandará al backend
-  let totalPages      = 1;
+  let noticiasData     = [];
+  let currentPage      = 1;
+  let currentCategory  = '';    // '' => random
+  let currentSentiment = '';    // '', 'positive', 'neutral', 'negative'
+  let totalPages       = 1;
 
   // ========= Helpers =========
   function visibleToRealCategory(visible) {
     if (!visible) return '';
     const key = String(visible).trim().toLowerCase();
+    if (key === 'todos') return ''; // fuerza random
     return CATEGORY_MAP[key] || visible.trim();
   }
 
@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       category:      n.category || n.categoria || '',
       scraped_at:    n.scraped_at || null,
       date_publish:  n.date_publish || null,
+      sentiment:     n.sentiment || null,
     };
   }
 
@@ -52,61 +53,106 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch { return ''; }
   }
 
-function createCard(n) {
-  const card = document.createElement('div');
-  card.className = 'news-card';
+  // Normaliza el sentimiento a: 'positive' | 'neutral' | 'negative' | null
+  function getSentimentKind(s) {
+    if (!s || typeof s !== 'object') return null;
+    if ('positive' in s || 'neutral' in s || 'negative' in s) {
+      const v = { positive: s.positive || 0, neutral: s.neutral || 0, negative: s.negative || 0 };
+      let key = 'neutral', val = v.neutral;
+      if (v.positive >= val && v.positive >= v.negative) { key = 'positive'; val = v.positive; }
+      if (v.negative >= val && v.negative >= v.positive) { key = 'negative'; val = v.negative; }
+      return key;
+    }
+    if ('label' in s) return String(s.label || '').toLowerCase();
+    return null;
+  }
 
-  const h2 = document.createElement('h2');
-  const a  = document.createElement('a');
-  a.textContent = n.title;
-  a.href = n.url || '#';
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  h2.appendChild(a);
+  function pickSentimentLabel(s) {
+    if (!s || typeof s !== 'object') return { label: 'Sin análisis', cls: 'sentiment-neu' };
+    if ('positive' in s || 'neutral' in s || 'negative' in s) {
+      const v = { positive: s.positive || 0, neutral: s.neutral || 0, negative: s.negative || 0 };
+      let key = 'neutral', val = v.neutral;
+      if (v.positive >= val && v.positive >= v.negative) { key = 'positive'; val = v.positive; }
+      if (v.negative >= val && v.negative >= v.positive) { key = 'negative'; val = v.negative; }
+      if (key === 'positive' && val > 0) return { label: 'Positiva', cls: 'sentiment-pos' };
+      if (key === 'negative' && val > 0) return { label: 'Negativa', cls: 'sentiment-neg' };
+      return { label: 'Neutral', cls: 'sentiment-neu' };
+    }
+    if ('label' in s) {
+      const lbl = String(s.label || '').toLowerCase();
+      if (lbl === 'positive') return { label: 'Positiva', cls: 'sentiment-pos' };
+      if (lbl === 'negative') return { label: 'Negativa', cls: 'sentiment-neg' };
+      if (lbl === 'neutral')  return { label: 'Neutral',  cls: 'sentiment-neu' };
+    }
+    return { label: 'Sin análisis', cls: 'sentiment-neu' };
+  }
 
-  const p = document.createElement('p');
-  p.textContent = (n.description || '').slice(0, 400);
+  // ===== Tarjeta =====
+  function createCard(n) {
+    const card = document.createElement('div');
+    card.className = 'news-card';
 
-  const meta = document.createElement('div');
-  meta.className = 'news-meta';
-  const source = n.source_domain ? ` · ${n.source_domain}` : '';
-  const when = formatDateMaybe(n.date_publish) || formatDateMaybe(n.scraped_at);
-  meta.textContent = `${n.category || ''}${source}${when ? ' · ' + when : ''}`;
+    const h2 = document.createElement('h2');
+    const a  = document.createElement('a');
+    a.textContent = n.title;
+    a.href = n.url || '#';
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    h2.appendChild(a);
 
-  const actions = document.createElement('div');
-  actions.className = 'news-actions';
+    const p = document.createElement('p');
+    p.textContent = (n.description || '').slice(0, 400);
 
-  const link = document.createElement('a');
-  link.textContent = 'Abrir noticia ↗';
-  link.href = n.url || '#';
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
+    const meta = document.createElement('div');
+    meta.className = 'news-meta';
+    const source = n.source_domain ? ` · ${n.source_domain}` : '';
+    const when   = formatDateMaybe(n.date_publish) || formatDateMaybe(n.scraped_at);
+    meta.textContent = `${n.category || ''}${source}${when ? ' · ' + when : ''}`;
 
-  actions.appendChild(link);
+    const actions = document.createElement('div');
+    actions.className = 'news-actions';
 
-  // Botón guardar flotante (esquina inferior derecha)
-  const saveBtn = document.createElement('button');
-  saveBtn.className = 'save-btn';
-  saveBtn.setAttribute('type', 'button');
-  saveBtn.setAttribute('title', 'Guardar');
-  saveBtn.setAttribute('aria-pressed', 'false');
+    const link = document.createElement('a');
+    link.textContent = 'Abrir noticia ↗';
+    link.href = n.url || '#';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
 
-  // Icono bookmark (vacío → se rellena con .saved)
-  saveBtn.innerHTML = `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
-    </svg>
-  `;
+    const chip = document.createElement('span');
+    const s = pickSentimentLabel(n.sentiment);
+    chip.className = `sentiment-chip ${s.cls}`;
+    chip.textContent = s.label;
 
-  card.appendChild(h2);
-  card.appendChild(p);
-  card.appendChild(meta);
-  card.appendChild(actions);
-  card.appendChild(saveBtn); // importante: después para que quede por encima
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-btn';
+    saveBtn.type = 'button';
+    saveBtn.title = 'Guardar';
+    saveBtn.setAttribute('aria-pressed', 'false');
 
-  return card;
-}
+    // >>> DATOS PARA favoritos.js <<<
+    saveBtn.dataset.url      = n.url || '';
+    saveBtn.dataset.title    = n.title || '';
+    saveBtn.dataset.source   = n.source_domain || '';
+    saveBtn.dataset.category = n.category || '';
+    saveBtn.dataset.date     = n.date_publish || '';
 
+    saveBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
+      </svg>
+    `;
+
+    actions.appendChild(link);
+    actions.appendChild(chip);
+    actions.appendChild(saveBtn);
+
+    card.appendChild(h2);
+    card.appendChild(p);
+    card.appendChild(meta);
+    card.appendChild(actions);
+
+    return card;
+  }
 
   function createPageElement(items) {
     const pageEl = document.createElement('div');
@@ -119,13 +165,10 @@ function createCard(n) {
     const start = (page - 1) * pageSize;
     const end   = start + pageSize;
     const pageItems = noticiasData.slice(start, end);
-
     const nextPageEl = createPageElement(pageItems);
-
     Array.from(container.querySelectorAll('.news-page')).forEach(el => el.remove());
     container.innerHTML = '';
     container.appendChild(nextPageEl);
-
     requestAnimationFrame(() => nextPageEl.classList.add('show'));
   }
 
@@ -201,11 +244,17 @@ function createCard(n) {
 
   async function fetchRandomFromBackend() {
     const qs = new URLSearchParams();
-    qs.set('limit', '200'); // muestra bastante para paginar en front
+    qs.set('limit', '200');
     const url = `${API_BASE.replace(/\/$/, '')}/news/random/?${qs.toString()}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
+  }
+
+  // Filtro por sentimiento (front)
+  function filterBySentiment(list) {
+    if (!currentSentiment) return list; // sin filtro
+    return list.filter(item => getSentimentKind(item.sentiment) === currentSentiment);
   }
 
   async function loadAndRender(visibleCategory = '') {
@@ -214,15 +263,16 @@ function createCard(n) {
     try {
       let list = [];
       if (USE_BACKEND) {
-        // Si no hay categoría elegida, carga aleatorias
         list = currentCategory
-          ? await fetchFromBackend(currentCategory)
-          : await fetchRandomFromBackend();
+          ? await fetchFromBackend(currentCategory) // categoría específica
+          : await fetchRandomFromBackend();         // TODOS → random
       }
+      list = Array.isArray(list) ? list.map(normalizeItem) : [];
+      list = filterBySentiment(list);
 
-      noticiasData = Array.isArray(list) ? list.map(normalizeItem) : [];
+      noticiasData = list;
       if (noticiasData.length === 0) {
-        container.innerHTML = `<div class="loading">Aún no hay noticias para esta selección. Prueba otra categoría.</div>`;
+        container.innerHTML = `<div class="loading">No hay noticias para esta selección.</div>`;
         pagination.innerHTML = '';
         return;
       }
@@ -237,18 +287,51 @@ function createCard(n) {
     }
   }
 
-  // ==== Click en categorías del menú lateral ====
-  sideMenu?.querySelectorAll('ul li').forEach(li => {
+  // ==== Categorías (usa el PRIMER <ul> del side menu) ====
+  const allUls = sideMenu?.querySelectorAll('ul');
+  const categoryUl = allUls && allUls.length ? allUls[0] : null;
+
+  categoryUl?.querySelectorAll('li').forEach(li => {
     li.style.cursor = 'pointer';
     li.addEventListener('click', () => {
-      const visible = (li.textContent || '').trim();
-      loadAndRender(visible);
+      categoryUl.querySelectorAll('li').forEach(x => x.classList.remove('active'));
+      li.classList.add('active');
+
+      const visible = (li.textContent || '').trim(); // 'Todos' o categoría
+      loadAndRender(visible);                         // 'Todos' => random
       sideMenu.classList.remove('open');
     });
   });
 
-  // Carga inicial: SIN categoría → noticias aleatorias
-  loadAndRender('');
+  // ==== Sentimientos (id="sentiment-filter") ====
+  const sentimentList = document.getElementById('sentiment-filter');
+  const SENT_MAP = { '': '', 'positivo': 'positive', 'neutral': 'neutral', 'negativo': 'negative' };
+
+  sentimentList?.querySelectorAll('li').forEach(li => {
+    li.style.cursor = 'pointer';
+    li.addEventListener('click', () => {
+      sentimentList.querySelectorAll('li').forEach(x => x.classList.remove('active'));
+      li.classList.add('active');
+
+      const keyEs = (li.dataset.sent ?? '').trim().toLowerCase(); // '', 'positivo', ...
+      currentSentiment = SENT_MAP[keyEs] || '';
+
+      // recarga manteniendo la categoría actual
+      loadAndRender(currentCategory || 'Todos');
+      sideMenu.classList.remove('open');
+    });
+  });
+
+  // Marcar por defecto “Todos”
+  categoryUl?.querySelectorAll('li')?.forEach(li => {
+    if ((li.textContent || '').trim().toLowerCase() === 'todos') li.classList.add('active');
+  });
+  sentimentList?.querySelectorAll('li')?.forEach(li => {
+    if ((li.dataset.sent ?? '').trim() === '') li.classList.add('active');
+  });
+
+  // Carga inicial: random + sin filtro de sentimiento
+  loadAndRender('Todos');
 });
 
 /* Sanitizador básico */

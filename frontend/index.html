@@ -94,15 +94,43 @@
     <nav id="side-menu" class="side-menu">
         <button class="close-btn" id="close-menu">✕</button>
 
+
+        <!-- MODO CLARO Y OSCURO -->
+
+        <div class="theme-switcher">
+            <h3 class="menu-title">Tema</h3>
+
+            <div class="theme-options" role="radiogroup" aria-label="Tema del sitio">
+   
+                <button class="theme-opt" data-theme="light" aria-pressed="false">Claro</button>
+                <button class="theme-opt" data-theme="auto" aria-pressed="false">Automático</button>
+                <button class="theme-opt" data-theme="dark" aria-pressed="false">Oscuro</button>
+
+            </div>
+
+        </div>
+
+
         <!-- TITLE -->
          <h3 class="menu-title">Categorías</h3>
 
         <ul>
+            <li>Todos</li>
             <li>Judiciales</li>
             <li>Deportes</li>
             <li>Animales</li>
             <li>Tecnología</li>
             <li>Moda</li>
+        </ul>
+
+
+        <h3 class="menu-title"">Sentimientos</h3>
+        <ul id="sentiment-filter" class="filter-list">
+
+            <li data-sent="">Todos</li>
+            <li data-sent="positivo">Positivo</li>
+            <li data-sent="neutral">Neutral</li>
+            <li data-sent="negativo">Negativo</li>
         </ul>
 
         <div class="side-footer">
@@ -349,6 +377,7 @@
     <script src="./js/notifier.js"></script>
     <script src="./js/notifierPanelUser.js"></script>
     <script src="./js/favoritos.js"></script>
+    <script src="./js/autoTheme.js"></script>
 
 </body>
 </html>

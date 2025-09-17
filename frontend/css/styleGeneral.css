@@ -310,3 +310,22 @@ body.loaded #age-overlay {
   outline-offset: 2px;
 }
 
+
+
+
+
+/* DARKNES MODE */
+
+/* Modo oscuro por inversión global (activado por una clase en <html>) */
+html.dark-invert {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Corrige elementos multimedia (doble invert para que se vean normales) */
+html.dark-invert img,
+html.dark-invert video,
+html.dark-invert picture,
+html.dark-invert canvas,
+html.dark-invert svg:not([fill="none"]) {
+  filter: invert(1) hue-rotate(180deg);
+}

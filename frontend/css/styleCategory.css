@@ -66,3 +66,58 @@
     border-bottom: 2px solid #ddd;
     padding-bottom: 10px;
 }
+
+
+/* Activo en listas de menú */
+.side-menu ul li.active,
+.filter-list li.active {
+  color: #004080;
+  font-weight: 700;
+}
+
+
+
+/* Selector de tema (en el side-menu) */
+.theme-switcher { margin-bottom: 14px; }
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5rem;
+}
+
+.theme-opt {
+  padding: .5rem .6rem;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+
+.theme-opt:hover { background: #eef4ff; }
+
+.theme-opt.active,
+.theme-opt[aria-pressed="true"] {
+  background: #004080;
+  color: #fff;
+  border-color: #004080;
+}
+
+/* Filtro de inversión global cuando forzamos oscuro */
+html.dark-invert {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Fix multimedia para no verse “invertido al doble” */
+html.dark-invert img,
+html.dark-invert video,
+html.dark-invert picture,
+html.dark-invert canvas,
+html.dark-invert svg:not([fill="none"]) {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Si algún logo/ícono no debe invertirse, ponle la clase .no-invert */
+html.dark-invert .no-invert { filter: none !important; }
