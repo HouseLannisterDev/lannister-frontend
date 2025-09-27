@@ -1,0 +1,33 @@
+steps:
+  # 1) Sincroniza SOLO la carpeta frontend/ al bucket (respeta subcarpetas css/js/assets)
+  - name: gcr.io/cloud-builders/gsutil
+    dir: frontend
+    args: ["-m", "rsync", "-r", ".", "gs://lannister-frontend-1758939676"]
+
+  # 2) (Una vez por deploy) Asegura website main/404
+  - name: gcr.io/cloud-builders/gsutil
+    args: ["web", "set", "-m", "index.html", "-e", "404.html", "gs://lannister-frontend-1758939676"]
+
+  # 3) Cache: HTML sin caché para ver cambios al instante
+  - name: gcr.io/cloud-builders/gsutil
+    args:
+      - "-m"
+      - "setmeta"
+      - "-h"
+      - "Cache-Control:no-cache, max-age=0"
+      - "gs://lannister-frontend-1758939676/index.html"
+      - "gs://lannister-frontend-1758939676/404.html"
+
+  # 4) Cache larga para assets estáticos (rendimiento)
+  - name: gcr.io/cloud-builders/gsutil
+    args:
+      - "-m"
+      - "setmeta"
+      - "-h"
+      - "Cache-Control:public, max-age=31536000, immutable"
+      - "gs://lannister-frontend-1758939676/css/**"
+      - "gs://lannister-frontend-1758939676/js/**"
+      - "gs://lannister-frontend-1758939676/assets/**"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
