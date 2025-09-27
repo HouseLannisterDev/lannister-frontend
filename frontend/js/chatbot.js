@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput   = document.getElementById('user-input');
   const chatBody    = document.getElementById('chat-body');
 
+  
+  const CHATBOT_API = 'http://127.0.0.1:8000/chatbot/';
+
   function appendUserMessage(text) {
     const p = document.createElement('p');
     p.classList.add('user-msg');
@@ -16,10 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function appendBotMessage(text) {
     const p = document.createElement('p');
-    p.classList.add('bot-msg');   // CSS con white-space: pre-line
-    p.textContent = text;         // seguridad + respeta \n
+    p.classList.add('bot-msg');     // en tu CSS: .bot-msg { white-space: pre-line; }
+    p.textContent = text || '';
     chatBody.appendChild(p);
     chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function appendTyping() {
+    const p = document.createElement('p');
+    p.classList.add('bot-msg', 'typing');
+    p.textContent = 'Escribiendo…';
+    chatBody.appendChild(p);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    return p; // devuelve el nodo para poder removerlo
   }
 
   async function sendMessage() {
@@ -29,31 +41,50 @@ document.addEventListener('DOMContentLoaded', () => {
     appendUserMessage(message);
     userInput.value = '';
 
+    const typingNode = appendTyping();
+
     try {
-      const response = await fetch('http://localhost:5000/api/chatbot', {
+      const res = await fetch(CHATBOT_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ question: message }),
+        credentials: 'include', 
       });
 
-      const data = await response.json();
-      appendBotMessage(data.response || '');
+      // Si la vista retorna error estructurado
+      if (!res.ok) {
+        let errTxt = 'Error del servidor.';
+        try {
+          const e = await res.json();
+          errTxt = e.error || e.detail || errTxt;
+        } catch {}
+        throw new Error(errTxt);
+      }
+
+      const data = await res.json();
+      // Django responde { question, answer }
+      appendBotMessage(data.answer);
     } catch (err) {
-      console.error('Error al contactar al chatbot:', err);
+      console.error('Error chatbot:', err);
       appendBotMessage('Ups, tuve un problema al responder. Intenta de nuevo en un momento 🙏');
+    } finally {
+      if (typingNode && typingNode.parentNode) {
+        typingNode.parentNode.removeChild(typingNode);
+      }
     }
   }
 
-  chatBtn.addEventListener('click', () => {
+  chatBtn?.addEventListener('click', () => {
     chatWindow.style.display = 'flex';
+    userInput.focus();
   });
 
-  closeBtn.addEventListener('click', () => {
+  closeBtn?.addEventListener('click', () => {
     chatWindow.style.display = 'none';
   });
 
-  sendBtn.addEventListener('click', sendMessage);
-  userInput.addEventListener('keypress', (e) => {
+  sendBtn?.addEventListener('click', sendMessage);
+  userInput?.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
   });
 });
