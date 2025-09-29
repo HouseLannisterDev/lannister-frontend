@@ -88,8 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function actualizarAvatares(foto) {
-    const defaultFoto = '/fotos/userIconDefault.png';
-    const rutaFinal = foto ? `/fotos/${foto}` : defaultFoto;
+    const base = '/assets';
+    const defaultFoto = `${base}/userIconDefault.png`;
+    const rutaFinal = foto ? `${base}/${foto}` : defaultFoto;
+
+
     const profileAvatar = document.getElementById('profile-avatar');
     const headerAvatar  = document.getElementById('user-avatar');
     if (profileAvatar) profileAvatar.src = rutaFinal;
