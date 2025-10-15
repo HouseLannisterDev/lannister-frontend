@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnRegister.disabled = true;
 
     try {
-      const resp = await fetch('http://127.0.0.1:8000/users/', {
+      const resp = await fetch('http://56.125.112.159/api/users/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

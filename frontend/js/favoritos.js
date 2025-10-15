@@ -1,6 +1,6 @@
 // /js/favoritos.js
 document.addEventListener('DOMContentLoaded', () => {
-  const API_BASE = 'http://127.0.0.1:8000/users';
+  const API_BASE = 'http://56.125.112.159/api/users';
   const PAGE_SIZE = 5;
 
   // ====================== API helpers ======================

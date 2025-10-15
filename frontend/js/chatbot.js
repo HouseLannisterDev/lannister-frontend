@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatBody    = document.getElementById('chat-body');
 
   
-  const CHATBOT_API = 'http://127.0.0.1:8000/chatbot/';
+  const CHATBOT_API = 'http://56.125.112.159/api/chatbot/';
 
   function appendUserMessage(text) {
     const p = document.createElement('p');
