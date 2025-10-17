@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnRegister.disabled = true;
 
     try {
-      const resp = await fetch('http://56.125.112.159/api/users/', {
+      const resp = await fetch('https://lannister-news.com/users/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

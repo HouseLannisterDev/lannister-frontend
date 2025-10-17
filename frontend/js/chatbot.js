@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatBody    = document.getElementById('chat-body');
 
   
-  const CHATBOT_API = 'http://56.125.112.159/api/chatbot/';
+  const CHATBOT_API = 'https://lannister-news.com/chatbot/chatbot/';
 
   function appendUserMessage(text) {
     const p = document.createElement('p');
