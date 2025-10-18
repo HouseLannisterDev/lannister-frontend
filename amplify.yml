@@ -2,17 +2,10 @@ version: 1
 applications:
   - appRoot: frontend
     frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm ci
-        build:
-          commands:
-            - npm run build
+      phases: {}        # no npm
       artifacts:
-        baseDirectory: build  
+        baseDirectory: .   # publica todo lo que está en /frontend
         files:
           - '**/*'
       cache:
-        paths:
-          - node_modules/**/*
+        paths: []
