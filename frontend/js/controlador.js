@@ -343,3 +343,15 @@ function escapeHTML(s) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
 }
+
+
+// Abrir/cerrar menú lateral
+const sideMenu = document.getElementById('side-menu');
+document.getElementById('menu-btn')?.addEventListener('click', () => {
+  sideMenu.classList.add('is-open');
+  document.body.style.overflow = 'hidden';   // evita scroll del body detrás
+});
+document.getElementById('close-menu')?.addEventListener('click', () => {
+  sideMenu.classList.remove('is-open');
+  document.body.style.overflow = '';         // restablece
+});

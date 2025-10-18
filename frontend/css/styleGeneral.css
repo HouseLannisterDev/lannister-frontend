@@ -329,3 +329,7 @@ html.dark-invert canvas,
 html.dark-invert svg:not([fill="none"]) {
   filter: invert(1) hue-rotate(180deg);
 }
+
+
+
+

@@ -1,92 +1,98 @@
-/* Menú lateral */
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -100%; /* Oculto completamente */
-    width: 280px;
-    height: 100%;
-    background: #fff;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
-    z-index: 20000;
-    transition: left 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
+/* ===== Side menu responsive + scroll (unificado) ===== */
+.side-menu{
+  position: fixed;
+  inset: 0 auto 0 0;                 /* top:0; right:auto; bottom:0; left:0 */
+  width: min(86vw, 420px);           /* 420px máx en desktop, 86vw en móviles */
+  height: 100dvh;                    /* viewport dinámico móvil */
+  background: #fff;
+  color: #0c2543;
+  z-index: 20000;                    /* por encima del resto de UI */
+  box-shadow: 0 0 24px rgba(0,0,0,.2);
+  transform: translateX(-100%);      /* oculto por defecto */
+  transition: transform .25s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-
-.side-menu.open {
-    left: 0; /* Aparece */
+/* Compatibilidad: abre con .open o .is-open */
+.side-menu.open,
+.side-menu.is-open{
+  transform: translateX(0);
 }
 
-.side-menu .close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #004080;
-    cursor: pointer;
-    align-self: flex-end;
-    margin-bottom: 20px;
+/* Botón “X” siempre visible (pegado arriba) */
+.side-menu .close-btn{
+  position: sticky;
+  top: 0;
+  margin-left: auto;
+  margin-right: .5rem;
+  margin-top: .5rem;
+  z-index: 2;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #004080;
+  cursor: pointer;
+  padding: .5rem .6rem;
 }
 
-.side-menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+/* Títulos dentro del panel (pegados arriba cuando se hace scroll) */
+.side-menu .menu-title{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: inherit;
+  font-size: 20px;
+  font-weight: bold;
+  color: #004080;  /* azul corporativo */
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  text-align: center;
+  border-top: 1px solid rgba(0,0,0,.06);
+  border-bottom: 2px solid #ddd;
+  padding: .5rem .75rem;
 }
 
-.side-menu ul li {
-    padding: 15px 0;
-    font-size: 18px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-    color: #333;
-    transition: color 0.3s;
+/* Contenedor scroll real del menú */
+.side-menu .side-scroll{
+  /* Pon tu contenido del menú dentro de este div */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 20px calc(16px + env(safe-area-inset-bottom));
+  gap: .75rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.side-menu ul li:hover {
-    color: #004080;
+/* Listas de opciones */
+.side-menu ul{ list-style: none; margin: 0; padding: 0; }
+.side-menu ul li{
+  padding: 15px 0;
+  font-size: 18px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  color: #333;
+  transition: color .2s;
 }
+.side-menu ul li:hover{ color: #004080; }
 
-/* Responsive */
-@media (max-width: 480px) {
-    .side-menu {
-        width: 100%;
-    }
-}
-
-
-.menu-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #004080; /* Azul corporativo */
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    text-align: center;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-}
-
-
-/* Activo en listas de menú */
+/* Activo en listas */
 .side-menu ul li.active,
-.filter-list li.active {
+.filter-list li.active{
   color: #004080;
   font-weight: 700;
 }
 
-
-
-/* Selector de tema (en el side-menu) */
-.theme-switcher { margin-bottom: 14px; }
-
-.theme-options {
+/* Selector de tema */
+.theme-switcher{ margin-bottom: 14px; }
+.theme-options{
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3,1fr);
   gap: .5rem;
 }
-
-.theme-opt {
+.theme-opt{
   padding: .5rem .6rem;
   border: 1px solid #ddd;
   background: #f7f7f7;
@@ -95,29 +101,45 @@
   cursor: pointer;
   transition: background .2s, color .2s, border-color .2s;
 }
-
-.theme-opt:hover { background: #eef4ff; }
-
+.theme-opt:hover{ background: #eef4ff; }
 .theme-opt.active,
-.theme-opt[aria-pressed="true"] {
+.theme-opt[aria-pressed="true"]{
   background: #004080;
   color: #fff;
   border-color: #004080;
 }
 
 /* Filtro de inversión global cuando forzamos oscuro */
-html.dark-invert {
-  filter: invert(1) hue-rotate(180deg);
-}
-
-/* Fix multimedia para no verse “invertido al doble” */
+html.dark-invert{ filter: invert(1) hue-rotate(180deg); }
+/* Fix multimedia para no verse “doble invertido” */
 html.dark-invert img,
 html.dark-invert video,
 html.dark-invert picture,
 html.dark-invert canvas,
-html.dark-invert svg:not([fill="none"]) {
+html.dark-invert svg:not([fill="none"]){
   filter: invert(1) hue-rotate(180deg);
 }
+/* Si algún logo/ícono no debe invertirse */
+html.dark-invert .no-invert{ filter: none !important; }
 
-/* Si algún logo/ícono no debe invertirse, ponle la clase .no-invert */
-html.dark-invert .no-invert { filter: none !important; }
+/* Mejora barra horizontal de categorías (header) */
+.category-bar{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.category-scroll{
+  display: flex;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  min-width: max-content;
+}
+
+/* Móviles con poca altura: fallback */
+@media (max-height: 640px){
+  .side-menu{ height: 100vh; }
+}
+
+/* Móviles muy angostos: el panel puede ocupar ancho completo */
+@media (max-width: 480px){
+  .side-menu{ width: 100vw; }
+}
