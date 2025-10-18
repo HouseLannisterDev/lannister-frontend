@@ -4,12 +4,15 @@ applications:
     frontend:
       phases:
         preBuild:
-          commands: []
+          commands:
+            - npm ci
         build:
-          commands: []
+          commands:
+            - npm run build
       artifacts:
-        baseDirectory: .
+        baseDirectory: build  
         files:
           - '**/*'
       cache:
-        paths: []
+        paths:
+          - node_modules/**/*
