@@ -1,9 +1,21 @@
-// === util: leer cookies (si no usas módulos, déjalo aquí arriba) ===
+// === utils comunes ===
+const API_BASE = 'https://lannister-news.com/users';
+
 function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-  return null;
+  const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return m ? decodeURIComponent(m.pop()) : null;
+}
+
+async function fetchCSRF() {
+  // Pide a Django que emita/renueve el cookie "csrftoken"
+  await fetch(`${API_BASE}/auth/csrf/`, { method: 'GET', credentials: 'include' });
+  const token = getCookie('csrftoken');
+
+  // Django suele emitir 64 chars; con >=32 evitamos falsos negativos
+  if (!token || token.length < 32) {
+    throw new Error('No se pudo obtener el token CSRF.');
+  }
+  return token;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,7 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Abrir/Cerrar login/registro
   btnLogin?.addEventListener('click', () => { loginOverlay.style.display = 'flex'; });
   btnLoginCancel?.addEventListener('click', () => { loginOverlay.style.display = 'none'; clearRegisterForm(); });
-  linkRegister?.addEventListener('click', (e) => { e.preventDefault(); loginOverlay.style.display = 'none'; registerOverlay.style.display = 'flex'; });
+  linkRegister?.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginOverlay.style.display = 'none';
+    registerOverlay.style.display = 'flex';
+  });
   btnRegisterCancel?.addEventListener('click', () => { registerOverlay.style.display = 'none'; clearRegisterForm(); });
 
   // Mostrar/Ocultar contraseñas
@@ -65,55 +81,49 @@ document.addEventListener('DOMContentLoaded', () => {
       first_name:    nombre,
       last_name:     apellido,
       password:      contrasena,
-      date_of_birth: birthday,
+      date_of_birth: birthday
     };
 
     btnRegister.disabled = true;
 
     try {
-      // 1) GET previo para que el backend ponga la cookie csrftoken
-      await fetch('https://lannister-news.com/users/', {
-        method: 'GET',
-        credentials: 'include',
-      });
+      // 1) Obtener token CSRF de forma explícita
+      const csrftoken = await fetchCSRF();  // 👈 igual que en login
 
-      // 2) Leer token y hacer POST con credenciales + CSRF
-      const csrftoken = getCookie('csrftoken') || '';
-
-      const resp = await fetch('https://lannister-news.com/users/', {
+      // 2) POST de registro con credenciales + token
+      const resp = await fetch(`${API_BASE}/`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': csrftoken,
-          'Accept': 'application/json, text/plain;q=0.9,*/*;q=0.8',
+          'X-Requested-With': 'XMLHttpRequest' // opcional, pero útil en algunos setups
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
-      const raw = await resp.text();
+      const text = await resp.text();
       let data = null;
-      try { data = raw ? JSON.parse(raw) : null; } catch {}
+      try { data = text ? JSON.parse(text) : null; } catch {}
 
       if (resp.ok) {
-        const msg = (data && (data.message || data.detail)) || 'Registro exitoso';
+        const msg = (data?.message || data?.detail || 'Registro exitoso');
         showNotification(msg, 'success', modalSelector);
         setTimeout(() => { registerOverlay.style.display = 'none'; }, 2000);
         clearRegisterForm();
       } else {
         const serverMsg =
-          (data && (data.error || data.detail || data.message)) ||
-          raw || 'Error en el registro';
+          data?.error || data?.detail || data?.message || text || 'Error en el registro';
 
-        if (serverMsg.toLowerCase().includes('unique') || serverMsg.toLowerCase().includes('exist')) {
+        if (/unique|exist/i.test(serverMsg)) {
           showNotification('Usuario o correo ya registrado. Prueba con otro.', 'error', modalSelector);
         } else {
           showNotification(serverMsg, 'error', modalSelector);
         }
       }
     } catch (err) {
-      console.error('[register] fetch error:', err);
-      showNotification('Error al conectar con el servidor.', 'error', modalSelector);
+      console.error('[register] error:', err);
+      showNotification(err.message || 'Error al conectar con el servidor.', 'error', modalSelector);
     } finally {
       btnRegister.disabled = false;
     }

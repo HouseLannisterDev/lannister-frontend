@@ -31,7 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchCSRF() {
     await fetch(`${API_BASE}/auth/csrf/`, { method: 'GET', credentials: 'include' });
-    return getCookie('csrftoken');
+    const token = getCookie('csrftoken');
+
+
+    if(!token || token.length < 32){
+      throw new Error('No se pudo obtener el token CSRF.');
+    }
+
+    return token;
   }
 
   async function apiLogin(username, password) {
