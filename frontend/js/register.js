@@ -1,5 +1,5 @@
 // === utils comunes ===
-const API_BASE = 'https://lannister-news.com/users';
+const API_BASE = 'https://api.lannister-news.com/users';
 
 function getCookie(name) {
   const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
