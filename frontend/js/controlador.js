@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sideMenu    = document.getElementById('side-menu');
   const pageSize    = 10;
 
-  const API_BASE     = 'https://lannister-news.com'; // backend de noticias
+  const API_BASE     = 'https://api.lannister-news.com'; // backend de noticias
   const USE_BACKEND  = true;
 
   const CATEGORY_MAP = {
