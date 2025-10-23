@@ -1,6 +1,6 @@
 // /js/favoritos.js
 document.addEventListener('DOMContentLoaded', () => {
-  const API_BASE = 'https://lannister-news.com/users';
+  const API_BASE = 'https://api.lannister-news.com/users';
   const PAGE_SIZE = 5;
 
   // ====================== API helpers ======================
