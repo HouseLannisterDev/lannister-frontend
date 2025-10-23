@@ -1,7 +1,7 @@
 // /js/login.js
 document.addEventListener('DOMContentLoaded', () => {
   // ====== CONFIG ======
-  const API_BASE = 'https://lannister-news.com/users';
+  const API_BASE = 'https://api.lannister-news.com/users';
 
   // ====== AUTH STATE GLOBAL ======
   window.auth = window.auth || { isLoggedIn: false, userId: null };
