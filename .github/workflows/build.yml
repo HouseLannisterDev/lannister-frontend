@@ -45,4 +45,4 @@ jobs:
             -Dsonar.organization=lannisternews
             -Dsonar.projectKey=HouseLannisterDev_lannister-frontend
             -Dsonar.projectBaseDir=frontend/server
-            -Dsonar.sources=src
+            -Dsonar.sources=../js, ../css, ../index.html, ../404.html
