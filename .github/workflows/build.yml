@@ -56,6 +56,5 @@ jobs:
             -Dsonar.organization=lannisternews
             -Dsonar.projectKey=HouseLannisterDev_lannister-frontend
             -Dsonar.projectBaseDir=frontend/server
-            -Dsonar.sources="., frontend/js, frontend/css, frontend/assets"
+            -Dsonar.sources="../"
             -Dsonar.javascript.package.json=frontend/server/package.json
-            -Dsonar.python.requirements=requirements.txt
