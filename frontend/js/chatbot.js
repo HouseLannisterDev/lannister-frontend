@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput   = document.getElementById('user-input');
   const chatBody    = document.getElementById('chat-body');
 
-  // 👇 importante: slash final
+  
   const CHATBOT_API = 'https://api.lannister-news.com/chatbot/';
 
   
