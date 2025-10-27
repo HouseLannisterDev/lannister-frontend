@@ -7,6 +7,41 @@ function getCookie(name) {
 }
 // ========================================================================
 
+// === util: escapar HTML y convertir URLs en enlaces clicables ============
+function escapeHTML(str = "") {
+  return str
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function linkify(text = "") {
+  let safe = escapeHTML(text);
+
+  // URLs con http/https
+  const urlRegex = /\bhttps?:\/\/[^\s<)]+/gi;
+  // dominios tipo www.ejemplo.com
+  const wwwRegex = /(^|[\s(])www\.[^\s<)]+/gi;
+
+  safe = safe.replace(urlRegex, (m) => {
+    return `<a href="${m}" target="_blank" rel="noopener noreferrer">${m}</a>`;
+  });
+
+  safe = safe.replace(wwwRegex, (m) => {
+    const prefix = m.startsWith("w") ? "" : m[0];
+    const url = m.startsWith("w") ? m : m.slice(1);
+    const href = `https://${url.trim()}`;
+    return `${prefix}<a href="${href}" target="_blank" rel="noopener noreferrer">${url.trim()}</a>`;
+  });
+
+  // Conserva saltos de línea
+  safe = safe.replace(/\n/g, "<br>");
+  return safe;
+}
+// ========================================================================
+
 document.addEventListener('DOMContentLoaded', () => {
   const chatBtn     = document.getElementById('open-chatbot');
   const chatWindow  = document.getElementById('chatbot-window');
@@ -15,10 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput   = document.getElementById('user-input');
   const chatBody    = document.getElementById('chat-body');
 
-  
   const CHATBOT_API = 'https://api.lannister-news.com/chatbot/';
-
-  
 
   function appendUserMessage(text) {
     const p = document.createElement('p');
@@ -30,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function appendBotMessage(text) {
     const p = document.createElement('p');
-    p.classList.add('bot-msg'); // en CSS: .bot-msg { white-space: pre-line; }
-    p.textContent = text || '';
+    p.classList.add('bot-msg');
+    p.innerHTML = linkify(text || ''); // 💡 ahora los links son clicables
     chatBody.appendChild(p);
     chatBody.scrollTop = chatBody.scrollHeight;
   }
@@ -56,13 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
     sendBtn.disabled = true;
 
     try {
-      // 1) GET previo para que el backend setee csrftoken
+      // 1) GET previo para obtener csrftoken
       await fetch(CHATBOT_API, {
         method: 'GET',
         credentials: 'include',
       });
 
-      // 2) POST con cookie + header CSRF
+      // 2) POST con cookie + CSRF
       const csrftoken = getCookie('csrftoken') || '';
 
       const res = await fetch(CHATBOT_API, {
