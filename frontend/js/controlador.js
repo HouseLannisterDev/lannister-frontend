@@ -353,5 +353,5 @@ document.getElementById('menu-btn')?.addEventListener('click', () => {
 });
 document.getElementById('close-menu')?.addEventListener('click', () => {
   sideMenu.classList.remove('is-open');
-  document.body.style.overflow = '';         // restablece
+  document.body.style.overflow = '';         // restablece check
 });
